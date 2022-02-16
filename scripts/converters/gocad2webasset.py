@@ -18,6 +18,8 @@ from lib.config_builder import ConfigBuilder
 
 from converters.converter import Converter
 
+import pickle
+
 GROUP_LIMIT = 8
 ''' If there are more than GROUP_LIMIT number of GOCAD objects in a group file
     then use one COLLADA file else put use separate COLLADA files for each object
@@ -456,11 +458,26 @@ class Gocad2WebAsset(Converter):
         :param out_filename: output filename without extension
         :param prop_idx: property index of volume's properties, integer
         '''
+        print("WRITING SINGLE VOLUME")
         geom_obj, style_obj, meta_obj = gsm_obj
         self.logger.debug(f"write_single_volume(geom_obj={geom_obj}, style_obj={style_obj}, meta_obj={meta_obj})")
         self.logger.debug(f"src_dir={src_dir}, out_filename={out_filename}, prop_idx={prop_idx})")
 
         if geom_obj.vol_data is not None:
+            print("OUT FILE", out_filename)
+            print("GEOM OBJ", geom_obj)
+            print("STYLE OBJ", style_obj)
+            print("META OBJ", meta_obj)
+            print("GEOM OBJ VOL DATA SHAPE", geom_obj.vol_data.shape)
+            print("COORDS SHAPE", "IJKL:", len(geom_obj._ijk_data), "XYZL:", len(geom_obj._xyz_data))
+            with open(out_filename + '.pkl','wb') as f:
+                pickle.dump(geom_obj, f)
+            for key in geom_obj._ijk_data[0].keys():
+                print(key, geom_obj._ijk_data[0][key])
+                break				
+            for key in geom_obj._xyz_data[0].keys():
+                print(key, geom_obj._xyz_data[0][key])
+                break				
             in_filename = os.path.join(src_dir, os.path.basename(out_filename))
             if not geom_obj.is_single_layer_vo():
                 if VOL_SLICER:

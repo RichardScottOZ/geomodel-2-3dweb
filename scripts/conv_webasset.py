@@ -16,7 +16,7 @@ from lib.config_builder import ConfigBuilder
 from converters.converter_factory import get_converter, FileType
 from lib.exports.collada2gltf import convert_dir, convert_file
 
-CONVERT_COLLADA = True
+CONVERT_COLLADA = False
 ''' Runs the collada2gltf program after creating COLLADA files
 '''
 
@@ -84,6 +84,7 @@ def find_and_process(converter_obj, src_dir, dest_dir):
         wildcard_str = os.path.join(src_dir, "*."+ext_str.lower())
         file_list = glob.glob(wildcard_str)
         for filename_str in file_list:
+            print("converter_obj",converter_obj, filename_str)		            
             converter_obj.process(filename_str, dest_dir)
 
     # Convert all files from COLLADA to GLTF v2
@@ -238,7 +239,9 @@ if __name__ == "__main__":
     # Only does 'GOCAD' and 'XYZV' files
     for file_type in (FileType.GOCAD, FileType.XYZV):
         ConverterClass = get_converter(file_type)
+        print(ConverterClass)
         converter = ConverterClass(DEBUG_LVL, params_obj, model_url_path, coord_offset, ct_file_dict, ARGS.nondefault_coords)
+        print(converter)
 
         # Process a directory of files
         if os.path.isdir(ARGS.src):

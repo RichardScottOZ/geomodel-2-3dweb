@@ -150,7 +150,13 @@ class ConfigBuilder():
             # Save out web asset JSON config file
             out_file = os.path.join(dest_dir, os.path.basename(output_filename))
             with open(out_file, "w") as file_p:
-                json.dump(config_dict, file_p, indent=4, sort_keys=True)
+                print("CONFIG DICT:", config_dict,"\n\n")			
+                for key in config_dict.keys():
+                    #config_dict[key] = str(config_dict[key])
+                    if "version" in key:
+                        config_dict[key] = str(config_dict[key])
+                    print("KEY:", key, config_dict[key], type(config_dict[key]),"\n")
+                #json.dump(config_dict, file_p, indent=4, sort_keys=True)
         except OSError as os_exc:
             LOCAL_LOGGER.error(f"Cannot open file {output_filename}, {os_exc}")
             return
